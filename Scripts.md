@@ -1,6 +1,4 @@
 # Análisis de Datos de Profundidad y Preparación para Clustering 
-
-
     import pandas as pd
     import matplotlib.pyplot as plt
                 from sklearn.preprocessing import StandardScaler
@@ -11,7 +9,7 @@
                 df.dropna(inplace = True)
                 df.describe()
     
-    Este bloque de código realiza lo siguiente:
+Este bloque de código realiza lo siguiente:
 
 1. **Importación de librerías**:
    - `pandas` para manejar y analizar datos.
@@ -30,6 +28,12 @@
            
          
 # Estandarización de Datos
+     df.describe()
+                scaler = StandardScaler()
+                df_scaled = scaler.fit_transform(df)
+                df[['RHOB_T', 'NPHI_T', 'GR_T', 'PEF_T', 'DTC_T']] = scaler.fit_transform(df[['RHOB', 'NPHI', 'GR', 'PEF', 'DTC']])
+                df    
+
 Este bloque realiza las siguientes operaciones:
 
 1. **Estadísticas descriptivas**:
@@ -46,13 +50,28 @@ Este bloque realiza las siguientes operaciones:
 4. **Resultado**:
    - El DataFrame `df` incluye tanto las columnas originales como las nuevas columnas escaladas.
 
-            df.describe()
-            scaler = StandardScaler()
-            df_scaled = scaler.fit_transform(df)
-            df[['RHOB_T', 'NPHI_T', 'GR_T', 'PEF_T', 'DTC_T']] = scaler.fit_transform(df[['RHOB', 'NPHI', 'GR', 'PEF', 'DTC']])
-            df
+
 
 # Función para Optimizar el Número de Clusters y Grafica de inercia
+     def optimize_kmeans(data, max_k):
+            means = []
+            inertias = []
+        
+            for k in range(1, max_k):
+                kmeans = KMeans(n_clusters = k)
+                kmeans.fit(data)
+                means.append(k)
+                inertias.append(kmeans.inertia_)
+        
+            fig = plt.subplots(figsize = (10, 5))
+            plt.plot(means, inertias, 'o-')
+            plt.xlabel('Number of clusters')
+            plt.ylabel('Inertia')
+            plt.grid(True)
+            plt.xticks(means)
+            plt.show()
+        
+            optimize_kmeans(df[['RHOB_T', 'NPHI_T']], 10)
 Este bloque de código realiza las siguientes tareas relacionadas con el uso de *k-means* para determinar el número óptimo de clusters:
 
 1. **Definición de la función `optimize_kmeans`**:
@@ -77,26 +96,13 @@ Este bloque de código realiza las siguientes tareas relacionadas con el uso de 
      - Aplica el análisis al subconjunto de datos compuesto por las columnas escaladas `RHOB_T` y `NPHI_T`.
      - Evalúa el modelo para un número de clusters desde 1 hasta 9 (`max_k - 1`).
 
-           def optimize_kmeans(data, max_k):
-            means = []
-            inertias = []
-        
-            for k in range(1, max_k):
-                kmeans = KMeans(n_clusters = k)
-                kmeans.fit(data)
-                means.append(k)
-                inertias.append(kmeans.inertia_)
-        
-            fig = plt.subplots(figsize = (10, 5))
-            plt.plot(means, inertias, 'o-')
-            plt.xlabel('Number of clusters')
-            plt.ylabel('Inertia')
-            plt.grid(True)
-            plt.xticks(means)
-            plt.show()
-        
-            optimize_kmeans(df[['RHOB_T', 'NPHI_T']], 10)
+          
 # Aplicar K-Means con 3 Clusters
+
+            kmeans = KMeans(n_clusters = 3)
+            kmeans.fit(df[['NPHI_T', 'RHOB_T']])
+            df['kmenas_3'] = kmeans.labels_
+            df
 Este bloque de código realiza las siguientes operaciones para aplicar el algoritmo de *k-means* con 3 clusters:
 
 1. **Creación del modelo `KMeans`**:
@@ -112,11 +118,16 @@ Este bloque de código realiza las siguientes operaciones para aplicar el algori
 4. **Resultado**:
    - El DataFrame `df` ahora incluye una nueva columna (`kmenas_3`) que clasifica cada punto de datos en uno de los 3 clusters creados por el modelo *k-means*.
 
-            kmeans = KMeans(n_clusters = 3)
-            kmeans.fit(df[['NPHI_T', 'RHOB_T']])
-            df['kmenas_3'] = kmeans.labels_
-            df
 # Gráfico de dispersión 
+    plt.scatter(x=df['NPHI'], y=df['RHOB'], c = df['kmenas_3'])
+            plt.xlim(-0.1,1)
+            plt.ylim(3,1.5)
+            plt.show()
+            for k in range(1, 6):
+                kmeans = KMeans(n_clusters = k)
+                kmeans.fit(df[['NPHI_T', 'RHOB_T']])
+                df[f'kmenas_{k}'] = kmeans.labels_
+            df
 Este bloque de código realiza las siguientes acciones:
 
 1. **Visualización con `scatter`**:
@@ -136,17 +147,13 @@ Este bloque de código realiza las siguientes acciones:
 3. **Resultado**:
    - Después de ejecutar el bucle, el DataFrame `df` contiene 5 nuevas columnas (`kmenas_1`, `kmenas_2`, `kmenas_3`, `kmenas_4`, `kmenas_5`), cada una correspondiente a las etiquetas de cluster generadas para diferentes números de clusters (de 1 a 5).
 
-            plt.scatter(x=df['NPHI'], y=df['RHOB'], c = df['kmenas_3'])
-            plt.xlim(-0.1,1)
-            plt.ylim(3,1.5)
-            plt.show()
-            for k in range(1, 6):
-                kmeans = KMeans(n_clusters = k)
-                kmeans.fit(df[['NPHI_T', 'RHOB_T']])
-                df[f'kmenas_{k}'] = kmeans.labels_
-            df
 # Visualización de los Gráficos múltiples de Clusters (de 1 a 5)
-
+    fig, axs = plt.subplots(nrows=1, ncols=5,  figsize = (20, 5))
+                for i, ax in enumerate(fig.axes, start=1):
+                    ax.scatter(x=df['NPHI'], y=df['RHOB'], c = df[f'kmenas_{i}'])
+                    ax.set_ylim(3,1.5)
+                    ax.set_xlim(0,1)
+                    ax.set_title(f'Clusters: {i}')
 Este bloque de código realiza lo siguiente para visualizar los resultados de los clusters en múltiples subgráficos:
 
 1. **Creación de subgráficos**:
@@ -159,13 +166,6 @@ Este bloque de código realiza lo siguiente para visualizar los resultados de lo
      - `ax.scatter(x=df['NPHI'], y=df['RHOB'], c=df[f'kmenas_{i}'])` crea un gráfico de dispersión para cada subgráfico (`ax`), utilizando las columnas `NPHI` y `RHOB` como los valores de los ejes X e Y, y coloreando los puntos según las etiquetas de cluster correspondientes a cada número de clusters (`kmenas_1`, `kmenas_2`, etc.).
      - `ax.set_ylim(3, 1.5)` y `ax.set_xlim(0, 1)` ajustan los límites de los ejes Y y X para cada gráfico.
      - `ax.set_title(f'Clusters: {i}')` agrega un título a cada subgráfico indicando el número de clusters representados.
-
-              fig, axs = plt.subplots(nrows=1, ncols=5,  figsize = (20, 5))
-                for i, ax in enumerate(fig.axes, start=1):
-                    ax.scatter(x=df['NPHI'], y=df['RHOB'], c = df[f'kmenas_{i}'])
-                    ax.set_ylim(3,1.5)
-                    ax.set_xlim(0,1)
-                    ax.set_title(f'Clusters: {i}')
 3. **Resultado**:
    - El resultado es una figura con 5 subgráficos, cada uno mostrando el gráfico de dispersión de los datos con el número de clusters correspondiente (de 1 a 5).
 
