@@ -57,6 +57,6 @@ El desempeño del modelo se evaluó en función de:
 - **Visualización de la asignación de clusters**: Se compararon diferentes configuraciones del modelo observando cómo las etiquetas de cluster se asignaban a los datos con distintos valores de K.
 
 ## Enlaces de Referencia
-- **Repositorio de GitHub**: [Enlace a GitHub](https://github.com/Dany601/Clustering)
-- **Colab Notebook**: [Enlace a Colab]((https://colab.research.google.com/drive/1ilaoA1D6glKjx-7OPLrnCxXJDJeQmPXC?usp=sharing#scrollTo=3pZcbAvfVvB-))
+- **Repositorio de GitHub Explicacion Codigo**: [Enlace a GitHub](https://github.com/Dany601/Clustering/blob/main/Scripts.md)
+- **Colab Notebook**: [Enlace a Colab](https://colab.research.google.com/drive/1ilaoA1D6glKjx-7OPLrnCxXJDJeQmPXC?usp=sharing#scrollTo=3pZcbAvfVvB-)
 
