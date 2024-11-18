@@ -169,4 +169,5 @@ Este bloque de código realiza lo siguiente para visualizar los resultados de lo
 3. **Resultado**:
    - El resultado es una figura con 5 subgráficos, cada uno mostrando el gráfico de dispersión de los datos con el número de clusters correspondiente (de 1 a 5).
 
-     
+# Enlaces 
+- **Colab Notebook**: [Enlace a Colab](https://colab.research.google.com/drive/1ilaoA1D6glKjx-7OPLrnCxXJDJeQmPXC?usp=sharing#scrollTo=3pZcbAvfVvB-)
